@@ -8,7 +8,7 @@ class TechadvisorSpider(scrapy.Spider):
     def parse(self, response):
         for link in response.xpath("//a[@class='thumb']/@href").getall():
             yield scrapy.Request(link, callback = self.categories)
-
+#         you are only scraping the first page
         
     def categories(self, response):
         for item in response.xpath("//*/div[@class='content-area']"):
