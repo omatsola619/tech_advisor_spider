@@ -4,11 +4,16 @@ import scrapy
 class TechadvisorSpider(scrapy.Spider):
     name = 'techadvisor'
     start_urls = ['https://www.techadvisor.com/review/']
+    page = 2
 
     def parse(self, response):
         for link in response.xpath("//a[@class='thumb']/@href").getall():
             yield scrapy.Request(link, callback = self.categories)
-#         you are only scraping the first page
+
+            next_page = "https://www.techadvisor.com/review/?p=" + str(TechadvisorSpider.page)
+            if TechadvisorSpider.page <= 202:
+                TechadvisorSpider.page += 1
+                yield scrapy.Request(next_page, callback = self.parse)
         
     def categories(self, response):
         for item in response.xpath("//*/div[@class='content-area']"):
